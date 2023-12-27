@@ -1,0 +1,9 @@
+---
+- hosts: demo
+  user: ansible
+  connection: ssh
+  tasks
+
+    - name: install wget
+      yum: 
+     
