@@ -14,7 +14,7 @@ source "amazon-ebs" "ubuntu" {
   region        = "us-east-1"
   source_ami_filter {
     filters = {
-      name                = "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*"
+      name                = "ami-04a81a99f5ec58529"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
