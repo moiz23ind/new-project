@@ -44,7 +44,10 @@ build {
       "sleep 30",
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
+      "sudo sed -i 's/#Port\s22/Port 8000/' /etc/ssh/sshd_config",
+      "sudo systemctl restart sshd.service",
       "sudo apt-get install -y nginx",
+      "sudo echo "<div><h1>$(cat /etc/hostname)</h1></div>" >> /var/www/html/index.html"
     ]
   }
 
