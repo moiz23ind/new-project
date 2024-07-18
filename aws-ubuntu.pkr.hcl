@@ -6,38 +6,51 @@ packer {
     }
   }
 }
+# Variables
+# variable "aws_access_key" {
+#   type = string
+# }
 
+# variable "aws_secret_key" {
+#   type = string
+# }
 
-source "amazon-ebs" "ubuntu" {
-  ami_name      = "packer-ubuntu-aws-{{timestamp}}"
-  instance_type = "t2.micro"
-  region        = "us-east-1"
-  source_ami_filter {
-    filters = {
-      name                = "ami-04a81a99f5ec58529"
-      root-device-type    = "ebs"
-      virtualization-type = "hvm"
-    }
-    most_recent = true
-    owners      = ["302289886828"]
-  }
-  ssh_username = "ubuntu"
+locals {
+  timestamp = regex_replace(timestamp(), "[- TZ:]", "")
 }
 
+# Sources (Builders)
+source "amazon-ebs" "demo" {
+  # access_key = var.aws_access_key
+  # secret_key = var.aws_secret_key
+  region     = "us-east-1"
+  source_ami = "ami-04a81a99f5ec58529"
+  instance_type = "t2.micro"
+  vpc_id = "vpc-01d1dce7846534cf8"
+  subnet_id = "subnet-0f5e505706a7cd0ae"
+  ssh_username = "ubuntu"
+  ami_name = "packer-demo-ami-${local.timestamp}"
+}
+
+# Builds
 build {
-  sources = ["source.amazon-ebs.ubuntu"]
+  sources = [
+    "source.amazon-ebs.demo",
+  ]
 
-  provisioner "file" {
-    source      = "script.sh"  # Replace with your actual script file
-    destination = "/tmp/script.sh"
-  }
-
+  # Provisioners
   provisioner "shell" {
     inline = [
-      "chmod +x /tmp/script.sh",
-      "/tmp/script.sh"
+      "sleep 30",
+      "sudo apt-get update",
+      "sudo apt-get upgrade -y",
+      "sudo apt-get install -y nginx",
     ]
   }
+
+  # Post-processors
+  post-processor "manifest" {
+    output = "manifest.json"
+    strip_path = true
+  }
 }
-
-
