@@ -47,7 +47,7 @@ build {
       "sudo sed -i 's/#Port\s22/Port 8000/' /etc/ssh/sshd_config",
       "sudo systemctl restart sshd.service",
       "sudo apt-get install -y nginx",
-      "sudo echo "<div><h1>$(cat /etc/hostname)</h1></div>" >> /var/www/html/index.html"
+      "sudo echo "<div><h1>$(cat /etc/hostname)</h1></div>" >> /var/www/html/index.html",
     ]
   }
 
